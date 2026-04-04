@@ -226,3 +226,40 @@ Then open the frontend URL shown by Vite (usually `http://localhost:5173`).
 - Add your own strong values for `JWT_SECRET` and `ADMIN_PASSWORD`.
 - Keep `.env` files private (already ignored by `.gitignore`).
 - Make sure MongoDB is running before starting backend (no in-memory fallback in production mode).
+
+## 10) Deploy Both Apps Online (Render Blueprint)
+
+This repository includes `render.yaml` to deploy backend + frontend together.
+
+### A) Before deploy
+
+1. Push latest code to GitHub.
+2. Create a MongoDB Atlas database and copy the connection string.
+
+### B) Deploy on Render
+
+1. In Render dashboard, choose **New +** -> **Blueprint**.
+2. Connect this GitHub repo.
+3. Render will detect `render.yaml` and create:
+   - `hostel-backend` (Node web service)
+   - `hostel-frontend` (static site)
+
+### C) Set required env values in Render
+
+Backend (`hostel-backend`) required:
+
+- `MONGO_URI` -> your MongoDB Atlas URI
+- `CORS_ORIGIN` -> frontend URL (for example `https://hostel-frontend.onrender.com`)
+- `ADMIN_PASSWORD` -> strong admin password
+
+Frontend (`hostel-frontend`) required:
+
+- `VITE_API_BASE_URL` -> backend URL + `/api`
+  - Example: `https://hostel-backend.onrender.com/api`
+
+### D) Redeploy order
+
+1. Deploy backend once to get its public URL.
+2. Set frontend `VITE_API_BASE_URL`.
+3. Set backend `CORS_ORIGIN` to frontend URL.
+4. Redeploy both services.
