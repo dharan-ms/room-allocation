@@ -12,12 +12,8 @@ const connectDB = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("MongoDB connected successfully");
   } catch (error) {
-    if (process.env.NODE_ENV === "production") {
-      throw new Error(`MongoDB connection failed in production: ${error.message}`);
-    }
-
     console.warn("MongoDB connection failed:", error.message);
-    console.warn("Using in-memory MongoDB for local development.");
+    console.warn("Using in-memory MongoDB fallback.");
 
     memoryServer = await MongoMemoryServer.create();
     await mongoose.connect(memoryServer.getUri());
